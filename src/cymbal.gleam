@@ -127,8 +127,8 @@ fn indent(acc: String, i: Int) -> String {
 }
 
 fn is_simple_string(s: String) -> Bool {
-  case s {
-    "yes" | "no" | "on" | "off" -> False
+  case string.lowercase(s) {
+    "" | "-" | "---" | "yes" | "no" | "y" | "n" | "on" | "off" | "true" | "false" | "null" -> False
     "0" <> _
     | "1" <> _
     | "2" <> _

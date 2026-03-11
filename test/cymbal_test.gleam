@@ -36,6 +36,16 @@ hello
   )
 }
 
+pub fn encode_empty_string_test() {
+  string("")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"\"
+",
+  )
+}
+
 pub fn encode_yes_test() {
   string("yes")
   |> cymbal.encode
@@ -56,6 +66,26 @@ pub fn encode_no_test() {
   )
 }
 
+pub fn encode_y_test() {
+  string("y")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"y\"
+",
+  )
+}
+
+pub fn encode_n_test() {
+  string("n")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"n\"
+",
+  )
+}
+
 pub fn encode_on_test() {
   string("on")
   |> cymbal.encode
@@ -72,6 +102,56 @@ pub fn encode_off_test() {
   |> should.equal(
     "---
 \"off\"
+",
+  )
+}
+
+pub fn encode_true_test() {
+  string("true")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"true\"
+",
+  )
+}
+
+pub fn encode_mixed_case_test() {
+  string("True")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"True\"
+",
+  )
+}
+
+pub fn encode_false_test() {
+  string("false")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"false\"
+",
+  )
+}
+
+pub fn encode_null_test() {
+  string("null")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"null\"
+",
+  )
+}
+
+pub fn encode_null_all_caps_test() {
+  string("NULL")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"NULL\"
 ",
   )
 }
@@ -122,6 +202,36 @@ pub fn encode_negative_float_string_test() {
   |> should.equal(
     "---
 \"-3.14\"
+",
+  )
+}
+
+pub fn encode_single_dash_simple_string_test() {
+  string("-")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"-\"
+",
+  )
+}
+
+pub fn encode_triple_dash_simple_string_test() {
+  string("---")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"---\"
+",
+  )
+}
+
+pub fn encode_dash_with_space_simple_string_test() {
+  string("- ")
+  |> cymbal.encode
+  |> should.equal(
+    "---
+\"- \"
 ",
   )
 }
@@ -272,6 +382,11 @@ pub fn k8s_pod_test() {
               #("name", string("example-container")),
               #("image", string("nginx")),
               #("ports", array([block([#("containerPort", int(80))])])),
+              #("env", array([
+                block([#("name", string("MY_FEATURE_FLAG_1")), #("value", string("false"))]),
+                block([#("name", string("MY_FEATURE_FLAG_2")), #("value", string("YES"))]),
+                block([#("name", string("MY_FEATURE_FLAG_3")), #("value", string("quotes-not-needed"))]),
+              ])),
             ]),
           ]),
         ),
@@ -291,6 +406,13 @@ spec:
     image: nginx
     ports:
     - containerPort: 80
+    env:
+    - name: MY_FEATURE_FLAG_1
+      value: \"false\"
+    - name: MY_FEATURE_FLAG_2
+      value: \"YES\"
+    - name: MY_FEATURE_FLAG_3
+      value: quotes-not-needed
 ",
   )
 }
